@@ -55,7 +55,7 @@ class BeeperHome extends BeeperBase {
 
   render() {
     return html` <beeper-header></beeper-header>
-      <h1>Welcome ${this.userName}!</h1>
+      <h1>Bonjour ${this.userName}!</h1>
       <textarea @keyup=${this.postBeep}></textarea>
       <beep-list beepList=${JSON.stringify(this.beepList)}></beep-list>`;
   }
