@@ -35,7 +35,9 @@ export class BeepView extends BeeperBase {
   }
 
   render() {
-    return html` <div class="beep">
+    return html` 
+    <div class="beep-box">
+    <div class="beep">
       <div class="beep-header">
         <img
           src="${this.beep.authorPicture}"
@@ -49,27 +51,27 @@ export class BeepView extends BeeperBase {
           <span class="created-at">
             &nbsp;- ${new Date(this.beep.createdAt).toLocaleString()} -&nbsp;
           </span>
-          <span
-            class="likes ${this.beep.liked ? "liked" : ""}"
-            ${this.beep.liked ? "data-liked" : ""}
-          >
-            <span
-              class="like-count ${this.beep.liked ? "liked" : ""}"
-              @click=${this.handleLike}
-            >
-              ${this.beep.likeCount}
-            </span>
-            +
-          </span>
+          <!-- Like button -->
+          <button @click=${this.handleLike} class="like-button"> Like </button>
+          <!-- Like count -->
+          <span class="like-count ${this.beep.liked ? 'liked-count' : ''}">${this.beep.likeCount} &#9829;</span>
         </div>
       </div>
       <div>${this.beep.content}</div>
+    </div>
     </div>`;
   }
 
   static styles = [
     BeeperBase.styles,
     css`
+      .beep-box {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+      }
+      
       .beep {
         margin-bottom: 16px;
       }
@@ -96,13 +98,26 @@ export class BeepView extends BeeperBase {
         font-size: 14px;
       }
 
-      .likes {
-        font-size: 12px;
+      .like-button {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
         cursor: pointer;
+        padding: 4px 8px;
+        margin-top: 8px;
       }
 
-      .liked {
-        font-weight: bold;
+      .like-count {
+        margin-left: 8px;
+        font-size: 14px;
+      }
+
+      .liked-count {
+        margin-left: 8px;
+        font-size: 14px;
+        color: red;
+      }
+
       }
     `,
   ];
