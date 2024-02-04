@@ -24,9 +24,19 @@ class BeeperHome extends BeeperBase {
     super.connectedCallback();
     const response = await fetch("/api/home");
     this.beepList = await response.json();
+    // this.beepList.forEach((beep) => {
+    //   console.log('Beep ID: ' + beep.id);
+    //   this.fetchCommentsForBeep(beep);
+    // });
 
     this.userName = (await getActiveUserProfile()).name;
   }
+
+  // async fetchCommentsForBeep(beep){
+  //   const responseComments = await fetch("/api/comments" + beep.id);
+  //   const commentList = await responseComments.json();
+  //   beep.comments = JSON.parse(commentList);
+  // }
 
   async postBeep(event) {
     if (event.type === "click" || (event.code === "Enter" && !event.getModifierState("Shift"))) {
