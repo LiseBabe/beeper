@@ -26,7 +26,6 @@ class UserPage extends BeeperBase {
     const viewedUserName = splitPath[splitPath.length - 1];
     const response = await fetch(`/api/user/${viewedUserName}`);
     this.userInfo = await response.json();
-
     this.isSelf =
       this.userInfo.viewedUser.id === (await getActiveUserProfile()).id;
   }

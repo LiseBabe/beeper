@@ -2,10 +2,12 @@ import { Router } from "express";
 import bodyParser from "body-parser";
 import { getUserHome } from "./use-case/get-user-home.js";
 import { postBeep } from "./use-case/post-beep.js";
-import { getUserPageByName } from "./use-case/get-user-page.js";
+import { UsernameNotFound, getUserPageByName } from "./use-case/get-user-page.js";
 import { like, unlike } from "./use-case/like.js";
 import { follow, unfollow } from "./use-case/follow.js";
 import { authMiddleware } from "./auth/auth-middleware.js";
+import { getUserSearch } from "./use-case/get-user-search.js";
+import { getBeepSearch } from "./use-case/get-beep-search.js";
 
 export const api = Router();
 
@@ -95,6 +97,33 @@ api.put("/unlike/:beepId", async (req, res) => {
   } catch (e) {
     if (e instanceof BeepNotFoundError) {
       res.status(400).send("Beep not found");
+    } else {
+      throw e;
+    }
+  }
+});
+
+api.get("/search/user/:search", async (req, res) => {
+  try {
+    const user = await getUserSearch(req.params.search);
+    res.status(200).json(user.users.rows);
+  } catch (e) {
+    if (e instanceof UsernameNotFound) {
+      res.status(400).send("User not found");
+    } else {
+      throw e;
+    }
+  }
+});
+
+api.get("/search/beep/:search", async (req, res) => {
+  try {
+    const user = await getBeepSearch(req.params.search);
+    console.log(user.beeps.rows)
+    res.status(200).json(user.beeps.rows);
+  } catch (e) {
+    if (e instanceof UsernameNotFound) {
+      res.status(400).send("User not found");
     } else {
       throw e;
     }
