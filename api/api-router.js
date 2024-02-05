@@ -2,12 +2,22 @@ import { Router } from "express";
 import bodyParser from "body-parser";
 import { getUserHome } from "./use-case/get-user-home.js";
 import { postBeep } from "./use-case/post-beep.js";
+
 import { getUserPageByName } from "./use-case/get-user-page.js";
 import { BeepNotFoundError, like, unlike } from "./use-case/like.js";
+
+import { UsernameNotFound, getUserPageByName } from "./use-case/get-user-page.js";
+import { like, unlike } from "./use-case/like.js";
+
 import { follow, unfollow } from "./use-case/follow.js";
 import { CommentNotFoundError, CommentTooLongError, addComment, editComment, removeComment } from "./use-case/comment.js"; // Import the comment use-case functions
 import { authMiddleware } from "./auth/auth-middleware.js";
+
 import { getCommentsForBeep } from "./use-case/get-beep-comments.js";
+
+import { getUserSearch } from "./use-case/get-user-search.js";
+import { getBeepSearch } from "./use-case/get-beep-search.js";
+
 
 export const api = Router();
 
@@ -103,6 +113,7 @@ api.put("/unlike/:beepId", async (req, res) => {
   }
 });
 
+
 api.get("/comments/:beepId", async (req, res) => {
   try {
     const comments = await getCommentsForBeep(req.params.beepId);
@@ -111,11 +122,21 @@ api.get("/comments/:beepId", async (req, res) => {
   } catch (e) {
     if (e instanceof BeepNotFoundError) {
       res.status(400).send("Beep not found");
+
+api.get("/search/user/:search", async (req, res) => {
+  try {
+    const user = await getUserSearch(req.params.search);
+    res.status(200).json(user.users.rows);
+  } catch (e) {
+    if (e instanceof UsernameNotFound) {
+      res.status(400).send("User not found");
+
     } else {
       throw e;
     }
   }
 });
+
 
 // Route to add a comment to a beep
 api.post("/add-comment/:beepId", async (req, res) => {
@@ -141,6 +162,15 @@ api.put("/edit-comment/:commentId", async (req, res) => {
   } catch (error) {
     if (e instanceof CommentNotFoundError) {
       res.status(404).send("Comment not found");
+
+api.get("/search/beep/:search", async (req, res) => {
+  try {
+    const user = await getBeepSearch(req.params.search);
+    console.log(user.beeps.rows)
+    res.status(200).json(user.beeps.rows);
+  } catch (e) {
+    if (e instanceof UsernameNotFound) {
+      res.status(400).send("User not found");
     } else {
       throw e;
     }
@@ -160,4 +190,6 @@ api.delete("/delete-comment/:commentId", async (req, res) => {
   } catch (error) {
     res.status(500).send("Error deleting comment");
   }
+});
+
 });

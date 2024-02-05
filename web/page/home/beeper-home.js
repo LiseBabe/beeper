@@ -64,14 +64,15 @@ class BeeperHome extends BeeperBase {
     }
   }
 
+
   render() { //ce qui va se mettre sur la page : puis html
-    return html` <beeper-header></beeper-header> 
+    return html` <beeper-header></beeper-header>
       <h1>Welcome ${this.userName}!</h1>
       <div class="compose-container">
-        <textarea @keyup=${this.postBeep}></textarea>
-        <button @click=${this.postBeep} class="post-button">Post</button>
-      </div>
+      <textarea placeholder="Nouveau message" @keyup=${this.postBeep}></textarea>
+       <button @click=${this.postBeep} class="post-button">Post</button>
       <beep-list beepList=${JSON.stringify(this.beepList)}></beep-list>`;
+      </div>
   }
 
   static styles = [
