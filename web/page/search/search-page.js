@@ -3,6 +3,7 @@ import { BeeperBase } from "../../component/beeper-base.js";
 import "../../component/beeper-header.js";
 import "../../component/profile-list.js";
 import "../../component/beep-list-search.js";
+import "../../component/beep-list.js"
 
 class SearchPage extends BeeperBase {
     static properties = {
