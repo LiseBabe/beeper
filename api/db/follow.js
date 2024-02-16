@@ -1,3 +1,6 @@
+// This file contains functions to insert and delete follow relationships between users. 
+// It handles database operations related to following and unfollowing users.
+
 import { queryNormalized } from "./connection-pool.js";
 
 export class FolloweeDoesNotExistError extends Error {}

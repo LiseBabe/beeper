@@ -29,6 +29,13 @@ export class BeeperHeader extends BeeperBase {
         cursor: pointer;
         font-style: italic;
       }
+
+      .search-bar {
+        margin-left: auto;
+        border: none;
+        cursor: pointer;
+        font-style: italic;
+      }
     `,
   ];
 
@@ -46,7 +53,8 @@ export class BeeperHeader extends BeeperBase {
     return html`
       <div class="header">
         <a href="/home">🏠 Home</a>
-        <a href="/logout" class="logout">logout - </a>
+        <a class="search-bar" href="/search">🔍 Chercher</a>
+        <a href="/logout" class="logout">logout -    </a>
         <img class="profile-picture" src="${this.profile?.picture}" />
       </div>
     `;
