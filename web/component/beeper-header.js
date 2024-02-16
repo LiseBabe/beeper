@@ -54,7 +54,7 @@ export class BeeperHeader extends BeeperBase {
       <div class="header">
         <a href="/home">🏠 Home</a>
         <a class="search-bar" href="/search">🔍 Chercher</a>
-        <a href="/logout" class="logout">logout - </a>
+        <a href="/logout" class="logout">logout -    </a>
         <img class="profile-picture" src="${this.profile?.picture}" />
       </div>
     `;
