@@ -70,9 +70,11 @@ class BeeperHome extends BeeperBase {
       <h1>Welcome ${this.userName}!</h1>
       <div class="compose-container">
       <textarea placeholder="Nouveau message" @keyup=${this.postBeep}></textarea>
-       <button @click=${this.postBeep} class="post-button">Post</button>
-      <beep-list beepList=${JSON.stringify(this.beepList)}></beep-list>`;
+      <button @click=${this.postBeep} class="post-button">Post</button>
       </div>
+      <beep-list beepList=${JSON.stringify(this.beepList)}></beep-list>
+
+      `;
   }
 
   static styles = [

@@ -3,11 +3,9 @@ import bodyParser from "body-parser";
 import { getUserHome } from "./use-case/get-user-home.js";
 import { postBeep } from "./use-case/post-beep.js";
 
-import { getUserPageByName } from "./use-case/get-user-page.js";
 import { BeepNotFoundError, like, unlike } from "./use-case/like.js";
 
 import { UsernameNotFound, getUserPageByName } from "./use-case/get-user-page.js";
-import { like, unlike } from "./use-case/like.js";
 
 import { follow, unfollow } from "./use-case/follow.js";
 import { CommentNotFoundError, CommentTooLongError, addComment, editComment, removeComment } from "./use-case/comment.js"; // Import the comment use-case functions
@@ -122,6 +120,13 @@ api.get("/comments/:beepId", async (req, res) => {
   } catch (e) {
     if (e instanceof BeepNotFoundError) {
       res.status(400).send("Beep not found");
+    } else {
+      throw e;
+    }
+  }
+});
+
+
 
 api.get("/search/user/:search", async (req, res) => {
   try {
@@ -162,11 +167,16 @@ api.put("/edit-comment/:commentId", async (req, res) => {
   } catch (error) {
     if (e instanceof CommentNotFoundError) {
       res.status(404).send("Comment not found");
+    } else {
+      throw e;
+    }
+  }
+});
 
 api.get("/search/beep/:search", async (req, res) => {
   try {
-    const user = await getBeepSearch(req.params.search);
-    console.log(user.beeps.rows)
+    console.log(req.user.id)
+    const user = await getBeepSearch(req.user.id,req.params.search);
     res.status(200).json(user.beeps.rows);
   } catch (e) {
     if (e instanceof UsernameNotFound) {
@@ -190,6 +200,4 @@ api.delete("/delete-comment/:commentId", async (req, res) => {
   } catch (error) {
     res.status(500).send("Error deleting comment");
   }
-});
-
 });

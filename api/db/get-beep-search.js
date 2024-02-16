@@ -1,6 +1,6 @@
 import { queryNormalized } from "./connection-pool.js";
 
-export async function findBeep(name) {
+export async function findBeep(activeUserId, name) {
   const rows = await queryNormalized(
     `SELECT 
       beep.id, 
@@ -9,15 +9,17 @@ export async function findBeep(name) {
       beep.like_count,
       users.id AS author_id, 
       users.name AS author_name,
-      users.picture AS author_picture
+      users.picture AS author_picture,
+      liked.id IS NOT NULL AS "liked"
     FROM 
       beep 
-    JOIN users ON beep.author_id = users.id
+      JOIN users ON beep.author_id = users.id
+      LEFT JOIN liked ON liked.liker_id = $2 AND liked.beep_id = beep.id
     WHERE beep.content LIKE '%' || $1 || '%'
     ORDER BY 
       beep.created_at DESC 
     `,
-    [`${name}`]
+    [`${name}`,activeUserId]
   );
     return {rows};
   }

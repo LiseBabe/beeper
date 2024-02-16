@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { BeeperBase } from "./beeper-base.js";
-import "./search-beep-view.js";
+import { BeepView } from "./beep-view.js";
 
 export class BeepListSearch extends BeeperBase {
   static properties = {
@@ -19,7 +19,7 @@ export class BeepListSearch extends BeeperBase {
   render() {
     return html`
       ${this.beepList.map(
-        (b) => html`<search-beep-view search="${JSON.stringify(b)}"></search-beep-view>`
+        (b) => html`<beep-view beep="${JSON.stringify(b)}"></beep-view>`
       )}
     `;
   }
