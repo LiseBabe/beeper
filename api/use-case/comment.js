@@ -1,5 +1,5 @@
 import DOMPurify from "isomorphic-dompurify";
-import { insertComment, updateComment, deleteComment } from "../db/comment.js";
+import { insertComment, removeComment } from "../db/comment.js";
 
 const COMMENT_MAX_LENGTH = 280;
 
@@ -22,24 +22,19 @@ export async function addComment(user, beepId, content) {
   };
 }
 
-export async function editComment(commentId, content) {
+export async function deleteComment(commentId) {
   try {
-    return await updateComment(commentId, content);
-  } catch (error) {
-    // Handle specific errors if necessary
-    throw error;
-  }
-}
+    // Delete the comment
+    const deletedComment = await removeComment(commentId);
 
-export async function removeComment(commentId) {
-  try {
-    const success = await deleteComment(commentId);
-    if (!success) {
-      throw new CommentNotFoundError("Comment not found");
-    }
-    return true;
+    // Return the deleted comment
+    return deletedComment;
   } catch (error) {
-    // Handle specific errors if necessary
+    // If the comment was not found, throw a specific error
+    if (error.message === "Comment not found") {
+      throw new CommentNotFoundError();
+    }
+    // Otherwise, re-throw the original error
     throw error;
   }
 }

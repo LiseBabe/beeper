@@ -8,7 +8,7 @@ import { BeepNotFoundError, like, unlike } from "./use-case/like.js";
 import { UsernameNotFound, getUserPageByName } from "./use-case/get-user-page.js";
 
 import { follow, unfollow } from "./use-case/follow.js";
-import { CommentNotFoundError, CommentTooLongError, addComment, editComment, removeComment } from "./use-case/comment.js"; // Import the comment use-case functions
+import { CommentNotFoundError, CommentTooLongError, addComment, deleteComment } from "./use-case/comment.js"; // Import the comment use-case functions
 import { authMiddleware } from "./auth/auth-middleware.js";
 
 import { getCommentsForBeep } from "./use-case/get-beep-comments.js";
@@ -157,22 +157,6 @@ api.post("/add-comment/:beepId", async (req, res) => {
   }
 });
 
-// Route to edit a comment
-api.put("/edit-comment/:commentId", async (req, res) => {
-  const { commentId } = req.params;
-  const { content } = req.body;
-  try {
-    const updatedComment = await editComment(commentId, content);
-    res.status(200).json(updatedComment);
-  } catch (error) {
-    if (e instanceof CommentNotFoundError) {
-      res.status(404).send("Comment not found");
-    } else {
-      throw e;
-    }
-  }
-});
-
 api.get("/search/beep/:search", async (req, res) => {
   try {
     console.log(req.user.id)
@@ -189,15 +173,14 @@ api.get("/search/beep/:search", async (req, res) => {
 
 // Route to delete a comment
 api.delete("/delete-comment/:commentId", async (req, res) => {
-  const { commentId } = req.params;
   try {
-    const success = await removeComment(commentId);
-    if (success) {
-      res.status(204).send();
+    const deletedComment = await deleteComment(req.params.commentId);
+    res.status(204).json(deletedComment);
+  } catch (e) {
+    if (e instanceof CommentNotFoundError) {
+      res.status(400).send("Comment not found");
     } else {
-      res.status(404).send("Comment not found");
+      throw e;
     }
-  } catch (error) {
-    res.status(500).send("Error deleting comment");
   }
 });

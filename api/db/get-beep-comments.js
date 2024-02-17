@@ -19,7 +19,7 @@ export async function getBeepComments(beepId) {
     ORDER BY
       created_at 
     LIMIT 
-      5
+      7
     `,
     [beepId]
   );
