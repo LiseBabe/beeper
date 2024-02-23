@@ -12,6 +12,7 @@ export class CommentView extends BeeperBase {
     super();
   }
 
+
   render() {
     return html`
       <div class="comment">
@@ -26,11 +27,13 @@ export class CommentView extends BeeperBase {
               ${this.comment.authorName}
             </a>
             <span class="created-at">
-              &nbsp;- ${new Date(this.comment.createdAt).toLocaleString()} -&nbsp;
+              &nbsp;&nbsp;- ${new Date(this.comment.createdAt).toLocaleString()} -&nbsp;
             </span>
           </div>
         </div>
-        <div class="comment-content">${this.comment.content}</div>
+        <div class="comment">
+            <div class="comment-content">${this.comment.content}</div>
+        </div>
       </div>
     `;
   }
@@ -67,6 +70,7 @@ export class CommentView extends BeeperBase {
       .comment-content {
         margin-left: 30px; /* Adjust as needed */
       }
+      
     `,
   ];
 }

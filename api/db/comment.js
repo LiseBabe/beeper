@@ -25,40 +25,23 @@ export async function insertComment(userId, beepId, content) {
   }
 }
 
-export async function updateComment(commentId, content) {
+export async function removeComment(commentId) {
   const connection = await pool.connect();
   try {
     await connection.query("BEGIN");
 
     const res = await connection.query(
-      "UPDATE comment SET content = $1 WHERE id = $2",
-      [content, commentId]
+        `DELETE FROM comment WHERE id = $1 RETURNING *`,
+        [commentId]
     );
+
+    if (res.rows.length === 0) {
+      throw new Error("Comment not found");
+    }
 
     await connection.query("COMMIT");
 
-    return res.rows[0]; // Assuming your query returns the updated comment
-  } catch (e) {
-    await connection.query("ROLLBACK");
-    throw e;
-  } finally {
-    connection.release();
-  }
-}
-
-export async function deleteComment(commentId) {
-  const connection = await pool.connect();
-  try {
-    await connection.query("BEGIN");
-
-    const res = await connection.query(
-      "DELETE FROM comment WHERE id = $1",
-      [commentId]
-    );
-
-    await connection.query("COMMIT");
-
-    return res.rowCount > 0; // Indicate whether the comment was successfully deleted
+    return res.rows[0]; // Assuming your query returns the deleted comment
   } catch (e) {
     await connection.query("ROLLBACK");
     throw e;

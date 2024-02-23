@@ -96,13 +96,29 @@ export class BeepView extends BeeperBase {
       }
     }
   }
+
+  async deleteComment(commentId) {
+    try {
+      const response = await fetch(`/api/delete-comment/${commentId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        // Remove the deleted comment from the UI
+        const updatedComments = this.comments.filter(comment => comment.id !== commentId);
+        this.comments = updatedComments; // Update the comments array without the deleted comment
+
+        // Fetch the comments again to ensure that the UI reflects the latest comments
+        await this.fetchComments();
+      } else {
+        console.error("Failed to delete comment:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  }
   
 
   render() {
-    // console.log("RENDER: Comments for " + this.beep.id +"Count " + this.comments.length);
-    // this.comments.forEach(element => {
-    //   console.log(element.content);
-    // });
     return html` 
     <div class="beep-box">
     <div class="beep">
@@ -125,12 +141,17 @@ export class BeepView extends BeeperBase {
           <span class="like-count ${this.beep.liked ? 'liked-count' : ''}">${this.beep.likeCount} &#9829;</span>
         </div>
       </div>
+      <!-- Render beep content -->
       <div>${this.beep.content}</div>
-        <div class="comments-container">
-          <!-- <beep-comment-list beepCommentList=${JSON.stringify(this.comments)}></beep-comment-list> -->
-          ${this.comments ? this.comments.map(
-            (comment) => html`<comment-view comment="${JSON.stringify(comment)}"></comment-view>`
-          ) : ''}
+      <!-- Render comments -->
+      <div class="comments-container">
+        ${this.comments ? this.comments.map(
+            (comment) => html`
+              <comment-view comment="${JSON.stringify(comment)}"></comment-view>
+              <!-- Delete button for each comment -->
+              <button @click=${() => this.deleteComment(comment.id)} class="delete-button">Delete</button>
+            `
+        ) : ''}
           <!-- Add comment -->
           <div class="add-comment">
             <textarea @keyup=${this.addComment}></textarea>
@@ -202,7 +223,14 @@ export class BeepView extends BeeperBase {
         padding: 4px 8px;
         margin-right: 8px; /* Add margin to separate the buttons */
       }
-
+      .delete-button {
+        background-color: pink;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 4px 8px;
+        //margin-left: 400px;
+        margin-bottom: 16px;
       }
     `,
   ];
